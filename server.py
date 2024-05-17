@@ -3,11 +3,19 @@ from dotenv import load_dotenv
 import os
 import base64 
 from requests import post, get
+from flask import Flask
+from flask_cors import CORS
+
+
+app = Flask(__name__)
+CORS(app)
 
 load_dotenv()
 
 client_id=os.getenv("CLIENT_ID")
 client_secret=os.getenv("CLIENT_SECRET")
+
+
 
 def get_token():
     auth_string = client_id+":"+client_secret
@@ -29,10 +37,21 @@ def get_token():
 def get_auth_header(token):
     return {"Authorization": "Bearer " + token}
 
-def search_artist(token, artistName):
+
+token = get_token()
+
+
+@app.route('/members')
+def members():
+    return {"members" : ["Member1", "Member2"]}
+
+
+
+@app.route("/search_artist/<artistName>")
+def search_artist(artistName):
     url="https://api.spotify.com/v1/search"
     headers = get_auth_header(token)
-    query= f"?q={artistName}&type=artist&limit=1"
+    query= f"?q={artistName}&type=artist&limit=5"
 
     queryUrl = url + query
     result = get(queryUrl, headers=headers)
@@ -40,9 +59,10 @@ def search_artist(token, artistName):
     if len(json_result)==0:
         print("No artist with this name exists :(")
         return None
-    return json_result[0]
+    return json_result
 
-def getArtistSongs(token, artistID):
+@app.route("/artist_songs/<artistID>")
+def getArtistSongs(artistID):
     url=f"https://api.spotify.com/v1/artists/{artistID}/top-tracks?country=US"
     headers = get_auth_header(token)
     result = get(url, headers=headers)
@@ -50,11 +70,17 @@ def getArtistSongs(token, artistID):
     return json_result
 
 
-token = get_token()
-result = search_artist(token, "ACDC")
-artistID = result["id"]
-songs = getArtistSongs(token, artistID)
-print(songs)
+result = search_artist("ACDC")
+artistID = result[0]["id"]
+songs = getArtistSongs(artistID)
+#print(songs)
 
 for idx, song in enumerate(songs):
     print (f"{idx + 1}.{song['name']}")
+
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=8080)
+    
