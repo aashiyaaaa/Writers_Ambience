@@ -23,6 +23,16 @@
   }
 }
 
+@media (max-width: 610px) { /* Adjust the breakpoint as needed */
+  .spotContainer {
+    flex-direction: column; /* Change to column layout on smaller screens */
+  }
+
+  .spot {
+    flex-basis: 100%; /* Each item takes up 100% of the container width on smaller screens */
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

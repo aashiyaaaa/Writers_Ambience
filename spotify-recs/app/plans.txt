@@ -1,0 +1,13 @@
+
+Hello! You must be wondering how this program works, here's my planning
+before I published the program. Thanks for visiting!
+
+Current sources:
+ - can get the emotional state of terms
+ - PROBLEM: how can we determine what music is best fitting the emotional state?
+    - determine energy x valence (emotion)
+    - compare to emotional analysis 
+        - binary search tree through the level of danceability, liveliness, 
+          and valence there should be
+    - 
+    - choose random analyze lyrics of the song and compare it to the text
